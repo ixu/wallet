@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:gravity="center" >
+
+    <TextView
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp" />    
+    
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="center" >
+        
+        <com.parse.ParseImageView
+            android:id="@+id/carousel_meme_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/meme_content_description"
+            android:minHeight="192dp" />
+    
+        <TextView
+            android:id="@+id/carousel_top_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/carousel_meme_image"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+    
+        <TextView
+            android:id="@+id/carousel_bottom_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/carousel_meme_image"
+            android:layout_centerHorizontal="true"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />      
+    </RelativeLayout>
+    
+    <Button
+        android:id="@+id/next_meme_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="96dp"
+        android:text="@string/next_meme_button" />    
+</LinearLayout>

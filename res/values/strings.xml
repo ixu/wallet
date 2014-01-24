@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="parse_app_id">8bn3H9oUBrS4B5IiK53q8x3ZrDMlGPWwf55r0mlf</string>
+    <string name="parse_client_key">w3bdjwyBFpXtPpG5zI3KGDyHENPBmSmYCiZpGpiX</string>
+    
+    <string name="app_name">Wallet</string>
+    <string name="input_email_hint">Email</string>
+    <string name="input_password_hint">Password</string>
+    <string name="login_button_text">Log in</string>
+    <string name="signup_button_text">Sign up</string>
+    <string name="meme_content_description">meme</string>
+    <string name="input_top_text_hint">Meme top line</string>
+    <string name="input_bottom_text_hint">Meme bottom line</string>
+    <string name="save_meme_button_text">Save</string>
+    <string name="meme_saved_toast_text">Meme saved!</string>
+    <string name="meme_save_failed_toast_text">Failed to save meme</string>
+    <string name="me_button_text">Me</string>    
+    <string name="failed_to_get_meme_toast_text">Failed to get meme</string>
+    <string-array name="input_images_array">
+        <item>yuno.png</item>
+    </string-array>    
+    <string name="logout_button_text">Logout</string>
+    <string name="next_meme_button">Next</string>
+</resources>
