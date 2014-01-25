@@ -3,12 +3,16 @@ package com.parse.wallet;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -16,6 +20,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +37,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 public class MainActivity extends Activity {
+  public final static String QR_CODE = "com.parse.wallet.QRCODE";
   private static final String TAG = "MainActivity";
   private static final int LOGIN_REQUEST = 0;
 
@@ -155,6 +161,42 @@ public class MainActivity extends Activity {
     }
   }
   
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+      // Inflate the menu items for use in the action bar
+      MenuInflater inflater = getMenuInflater();
+      inflater.inflate(R.layout.main_activity_actions, menu);
+      return super.onCreateOptionsMenu(menu);
+  }
+  
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+      // Handle presses on the action bar items
+      switch (item.getItemId()) {
+          case R.id.pending_cards:
+              openPendingCards();
+              return true;
+          case R.id.logout:
+        	  handleLogOut();
+        	  return true;
+          default:
+              return super.onOptionsItemSelected(item);
+      }
+  }
+  
+  public void openPendingCards(){
+	  Intent intent = new Intent(this, PendingCardsActivity.class);
+	  startActivity(intent);
+  }
+  public void openProfile(){
+	  Intent intent = new Intent(this, ProfileActivity.class);
+	  startActivity(intent);
+  }
+  public void displayQR(String code){
+	  Intent intent = new Intent(this, DisplayQRActivity.class);
+	  intent.putExtra(QR_CODE,code);
+  }
+  
   private void setupUI() {
     final Spinner imageSelect = (Spinner) findViewById(R.id.input_image_select);
     final EditText inputTopText = (EditText) findViewById(R.id.input_top_text);
@@ -164,8 +206,21 @@ public class MainActivity extends Activity {
     final ParseImageView previewImage = (ParseImageView) findViewById(R.id.preview_meme_image);
     
     Button saveButton = (Button) findViewById(R.id.save_meme_button);
-    Button meButton = (Button) findViewById(R.id.me_button);
-    Button logoutButton = (Button) findViewById(R.id.logout_button);
+    Button profile = (Button) findViewById(R.id.profile_button);
+    for (int i=0; i<10; i++){
+    	Button myButton = new Button(this);
+    	myButton.setText("Push Me");//TODO
+
+    	LinearLayout ll = (LinearLayout)findViewById(R.id.card_list);
+    	LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+    	ll.addView(myButton, lp);
+    	myButton.setOnClickListener(new OnClickListener() {
+    	      @Override
+    	      public void onClick(View v) {
+    	        displayQR("");//TODO
+    	      }
+    	    });
+    }
     
     getPhotosAndSetUpUI(imageSelect, previewImage);
         
@@ -209,19 +264,13 @@ public class MainActivity extends Activity {
       }
     });
 
-    meButton.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        startActivity(new Intent(MainActivity.this, MeActivity.class));
-      }
-    });
     
-    logoutButton.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleLogOut();
-      }
-    });
+    profile.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          openProfile();
+        }
+      });
   }
   
   // Sets up the photo selector spinner drop down menu

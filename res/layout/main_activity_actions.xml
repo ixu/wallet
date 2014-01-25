@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/pending_cards"
+          android:icon="@drawable/ic_action_view_as_list"
+          android:title="@string/pending_cards"
+          android:showAsAction="never" />
+    <item android:id="@+id/logout"
+          android:icon="@drawable/ic_action_view_as_list"
+          android:title="@string/logout_text"
+          android:showAsAction="never" />
+
+</menu>

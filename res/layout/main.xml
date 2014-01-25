@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:minWidth="96dp"
-        android:text="@string/save_meme_button_text" />    
+        android:text="@string/save_meme_button_text" />
     
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -66,31 +66,26 @@
             android:layout_alignBottom="@+id/preview_meme_image"
             android:layout_centerHorizontal="true"
             android:textColor="@android:color/white"
-            android:textSize="24sp" />       
-    </RelativeLayout>
+            android:textSize="24sp" />
 
-    <LinearLayout
+        <Button
+            android:id="@+id/profile_button"
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/profile" />
+
+        
+       
+    </RelativeLayout>
+	<LinearLayout 
+	    android:id="@+id/card_list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:gravity="center" >    
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:gravity="center" >
         
-         <Button
-            android:id="@+id/me_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:minWidth="96dp"
-            android:text="@string/me_button_text" />  
-                
-        
-         <Button
-            android:id="@+id/logout_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:minWidth="96dp"
-            android:text="@string/logout_button_text" />
-     </LinearLayout>
+	</LinearLayout>
+
 </LinearLayout>

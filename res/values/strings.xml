@@ -21,4 +21,7 @@
     </string-array>    
     <string name="logout_button_text">Logout</string>
     <string name="next_meme_button">Next</string>
+    <string name="pending_cards">Pending Cards</string>
+    <string name="profile">Profile</string>
+    <string name="logout_text">Logout</string>
 </resources>
