@@ -28,10 +28,10 @@ public class MeActivity extends Activity {
   private ParseImageView memeImage;
   
   // All memes created by this user
-  private List<ParseObject> myMemes;
+  private List<ParseObject> myCards;
   
   // The index of the current meme shown
-  private int currentMemeIndex = 0;
+  private int currentCardIndex = 0;
   
   /**
    * @return the email of the current user, empty string otherwise
@@ -50,20 +50,19 @@ public class MeActivity extends Activity {
    * memes fails, call showFailedToGetMemeToast().
    */
   private void getMemesAndDisplayFirst() {
-    ParseQuery<ParseObject> query = ParseQuery.getQuery("Meme");
+    ParseQuery<ParseObject> query = ParseQuery.getQuery("UserCard");
     query.whereEqualTo("user", ParseUser.getCurrentUser());
     query.addDescendingOrder("createdAt");
-    query.include("photo");
     query.findInBackground(new FindCallback<ParseObject>() {
-      public void done(List<ParseObject> memes, ParseException e) {
+      public void done(List<ParseObject> usercards, ParseException e) {
         if (e == null) {
-          Log.d(TAG, "Retrieved " + memes.size() + " memes");
-          myMemes = memes;
-          if (memes.size() > 0) {
-            updateMeme(0);
+          Log.d(TAG, "Retrieved " + usercards.size() + " cards");
+          myCards = usercards;
+          if (usercards.size() > 0) {
+            updateCard(0);
           }
         } else {
-          Log.d(TAG, "Error retrieving memes: " + e.getMessage());
+          Log.d(TAG, "Error retrieving cards: " + e.getMessage());
           showFailedToGetMemeToast();
         }
       }
@@ -77,12 +76,12 @@ public class MeActivity extends Activity {
    * Update the meme shown to the one at the current index in myMemes.
    * @param index
    */
-  private void updateMeme(int index) {
-    ParseObject currentMeme = myMemes.get(index);
-    memeImage.setParseFile(currentMeme.getParseObject("photo").getParseFile(
+  private void updateCard(int index) {
+    ParseObject currentCard = myCards.get(index);
+    memeImage.setParseFile(currentCard.getParseObject("photo").getParseFile(
         "file"));
-    topText.setText(currentMeme.getString("top"));
-    bottomText.setText(currentMeme.getString("bottom"));
+    topText.setText(currentCard.getParseObject("card").getString("name"));
+    bottomText.setText(currentCard.getString("exp"));
     memeImage.loadInBackground(new GetDataCallback() {
       @Override
       public void done(byte[] arg0, ParseException e) {
@@ -113,7 +112,7 @@ public class MeActivity extends Activity {
     nextButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (myMemes != null && myMemes.size() > 0) {
+        if (myCards != null && myCards.size() > 0) {
           currentMemeIndex++;
           updateMeme(currentMemeIndex % myMemes.size());
         }
