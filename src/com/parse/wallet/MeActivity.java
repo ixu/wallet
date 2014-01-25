@@ -1,20 +1,26 @@
 package com.parse.wallet;
 
+import java.util.EnumMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.parse.FindCallback;
-import com.parse.GetDataCallback;
 import com.parse.ParseException;
-import com.parse.ParseImageView;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -23,15 +29,16 @@ public class MeActivity extends Activity {
   private static final String TAG = "MeActivity";
 
   // UI elements for the meme shown
-  private TextView topText;
-  private TextView bottomText;
-  private ParseImageView memeImage;
+
+  private TextView cardnameText;
+  private TextView expText;
+  
   
   // All memes created by this user
-  private List<ParseObject> myMemes;
+  private List<ParseObject> myCards;
   
   // The index of the current meme shown
-  private int currentMemeIndex = 0;
+  private int currentCardIndex = 0;
   
   /**
    * @return the email of the current user, empty string otherwise
@@ -50,20 +57,20 @@ public class MeActivity extends Activity {
    * memes fails, call showFailedToGetMemeToast().
    */
   private void getMemesAndDisplayFirst() {
-    ParseQuery<ParseObject> query = ParseQuery.getQuery("Meme");
+    ParseQuery<ParseObject> query = ParseQuery.getQuery("UserCard");
     query.whereEqualTo("user", ParseUser.getCurrentUser());
     query.addDescendingOrder("createdAt");
-    query.include("photo");
+    query.include("card");
     query.findInBackground(new FindCallback<ParseObject>() {
-      public void done(List<ParseObject> memes, ParseException e) {
+      public void done(List<ParseObject> usercards, ParseException e) {
         if (e == null) {
-          Log.d(TAG, "Retrieved " + memes.size() + " memes");
-          myMemes = memes;
-          if (memes.size() > 0) {
-            updateMeme(0);
+          Log.d(TAG, "Retrieved " + usercards.size() + " cards");
+          myCards = usercards;
+          if (usercards.size() > 0) {
+            updateCard(0);
           }
         } else {
-          Log.d(TAG, "Error retrieving memes: " + e.getMessage());
+          Log.d(TAG, "Error retrieving cards: " + e.getMessage());
           showFailedToGetMemeToast();
         }
       }
@@ -77,22 +84,15 @@ public class MeActivity extends Activity {
    * Update the meme shown to the one at the current index in myMemes.
    * @param index
    */
-  private void updateMeme(int index) {
-    ParseObject currentMeme = myMemes.get(index);
-    memeImage.setParseFile(currentMeme.getParseObject("photo").getParseFile(
-        "file"));
-    topText.setText(currentMeme.getString("top"));
-    bottomText.setText(currentMeme.getString("bottom"));
-    memeImage.loadInBackground(new GetDataCallback() {
-      @Override
-      public void done(byte[] arg0, ParseException e) {
-        if (e == null) {
-          Log.d(TAG, "Finished loading meme image");
-        } else {
-          Log.d(TAG, "Error retrieving memes image: " + e.getMessage());
-        }
-      }
-    });
+  private void updateCard(int index) {
+	Log.v("index", Integer.toString(index));
+    ParseObject currentCard = myCards.get(index);
+    String cardId = currentCard.getObjectId();
+    encode(cardId);
+    Log.v("cardid", cardId);
+    cardnameText.setText(currentCard.getParseObject("card").getString("name"));
+    expText.setText(currentCard.getString("exp"));
+
   }  
     
   /***************** You don't need to change the code after this line ***********************/
@@ -101,21 +101,18 @@ public class MeActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.me);
 
-    TextView emailText = (TextView) findViewById(R.id.email_text);
-    topText = (TextView) findViewById(R.id.carousel_top_text);
-    bottomText = (TextView) findViewById(R.id.carousel_bottom_text);
-    memeImage = (ParseImageView) findViewById(R.id.carousel_meme_image);
+    cardnameText = (TextView) findViewById(R.id.cardname_text);
+    expText = (TextView) findViewById(R.id.exp_text);
     Button nextButton = (Button) findViewById(R.id.next_meme_button);
 
-    emailText.setText(getUserEmail());
     getMemesAndDisplayFirst();
     
     nextButton.setOnClickListener(new OnClickListener() {
       @Override
       public void onClick(View v) {
-        if (myMemes != null && myMemes.size() > 0) {
-          currentMemeIndex++;
-          updateMeme(currentMemeIndex % myMemes.size());
+        if (myCards != null && myCards.size() > 0) {
+          currentCardIndex++;
+          updateCard(currentCardIndex % myCards.size());
         }
       }
     });
@@ -124,5 +121,44 @@ public class MeActivity extends Activity {
   private void showFailedToGetMemeToast() {
     Toast.makeText(MeActivity.this, 
         R.string.failed_to_get_meme_toast_text, Toast.LENGTH_LONG).show();
+  }
+  
+  private void encode(String uniqueID) {
+      // TODO Auto-generated method stub
+       BarcodeFormat barcodeFormat = BarcodeFormat.QR_CODE;
+
+          int width0 = 500;
+          int height0 = 500;
+
+          int colorBack = 0x00000000;
+          int colorFront = 0xFFFFFFFF;
+
+          QRCodeWriter writer = new QRCodeWriter();
+          try
+          {
+              EnumMap<EncodeHintType, Object> hint = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+              //hint.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+              BitMatrix bitMatrix = writer.encode(uniqueID, barcodeFormat, width0, height0, hint);
+              int width = bitMatrix.getWidth();
+              int height = bitMatrix.getHeight();
+              int[] pixels = new int[width * height];
+              for (int y = 0; y < height; y++)
+              {
+                  int offset = y * width;
+                  for (int x = 0; x < width; x++)
+                  {
+
+                      pixels[offset + x] = bitMatrix.get(x, y) ? colorBack : colorFront;
+                  }
+              }
+
+              Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+              bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+              ImageView imageview = (ImageView)findViewById(R.id.carousel_meme_image);
+              imageview.setImageBitmap(bitmap);
+          } catch (WriterException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+          }
   }
 }

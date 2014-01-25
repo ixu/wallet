@@ -5,80 +5,53 @@
         android:layout_height="fill_parent"
         android:orientation="vertical"
         android:gravity="center" >
-
-    <Spinner
-        android:id="@+id/input_image_select"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:minWidth="160dp" />
-
-    <EditText
-        android:id="@+id/input_top_text"
+        
+   	<TextView
+        android:id="@+id/user_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:minWidth="160dp"
-        android:hint="@string/input_top_text_hint" />
-    
-    <EditText
-        android:id="@+id/input_bottom_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:minWidth="160dp"
-        android:hint="@string/input_bottom_text_hint" />
-    
-    <Button
-        android:id="@+id/save_meme_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:minWidth="96dp"
-        android:text="@string/save_meme_button_text" />
-    
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:gravity="center" >
         
-        <com.parse.ParseImageView
-            android:id="@+id/preview_meme_image"
+        <ImageView
+            android:id="@+id/user_qr"
             android:layout_width="wrap_content"
-            android:layout_height="160dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:contentDescription="@string/meme_content_description" />
-    
-        <TextView
-            android:id="@+id/preview_top_text"
+            android:contentDescription="@string/meme_content_description"
+            android:minHeight="192dp"/>
+                   
+    </RelativeLayout>
+	<TextView
+        android:id="@+id/email_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" /> 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="center" >    
+        
+         <Button
+            android:id="@+id/me_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/preview_meme_image"
-            android:layout_centerHorizontal="true"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-    
-        <TextView
-            android:id="@+id/preview_bottom_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/preview_meme_image"
-            android:layout_centerHorizontal="true"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-
-        <Button
-            android:id="@+id/profile_button"
-            android:layout_width="228dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="@string/profile" />
+            android:text="@string/me_button_text" />
 
         
        
-    </RelativeLayout>
+    </LinearLayout>
 	<LinearLayout 
 	    android:id="@+id/card_list"
         android:layout_width="fill_parent"

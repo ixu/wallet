@@ -7,10 +7,10 @@
         android:gravity="center" >
 
     <TextView
-        android:id="@+id/email_text"
+        android:id="@+id/cardname_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp" />    
+        android:textSize="24sp" />    
     
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -18,7 +18,7 @@
         android:layout_marginTop="32dp"
         android:gravity="center" >
         
-        <com.parse.ParseImageView
+        <ImageView
             android:id="@+id/carousel_meme_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,25 +26,14 @@
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/meme_content_description"
             android:minHeight="192dp" />
-    
-        <TextView
-            android:id="@+id/carousel_top_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/carousel_meme_image"
-            android:layout_centerHorizontal="true"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />
-    
-        <TextView
-            android:id="@+id/carousel_bottom_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/carousel_meme_image"
-            android:layout_centerHorizontal="true"
-            android:textColor="@android:color/white"
-            android:textSize="24sp" />      
+
     </RelativeLayout>
+    
+    <TextView
+        android:id="@+id/exp_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" />    
     
     <Button
         android:id="@+id/next_meme_button"

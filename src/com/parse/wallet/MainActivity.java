@@ -1,11 +1,13 @@
 package com.parse.wallet;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,10 +23,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import com.parse.FindCallback;
 import com.parse.GetDataCallback;
 import com.parse.ParseAnalytics;
@@ -43,6 +51,10 @@ public class MainActivity extends Activity {
 
   // Store all available meme background images
   private List<ParseObject> allPhotos;
+  
+  private TextView emailText;
+  private TextView userText;
+  private ImageView qrImage;
   
   // Keep track of which meme is being shown right now,
   // need to access from listeners
@@ -126,6 +138,7 @@ public class MainActivity extends Activity {
    */
   private void handleLogOut() {
     ParseUser.logOut();
+    ParseQuery.clearAllCachedResults();
     showLoginScreen();
   }
 
@@ -158,6 +171,7 @@ public class MainActivity extends Activity {
       finish();
     } else {
       Log.d(TAG, "User successfully login");
+      setupUI();
     }
   }
   
@@ -188,89 +202,42 @@ public class MainActivity extends Activity {
 	  Intent intent = new Intent(this, PendingCardsActivity.class);
 	  startActivity(intent);
   }
-  public void openProfile(){
-	  Intent intent = new Intent(this, ProfileActivity.class);
-	  startActivity(intent);
-  }
+
   public void displayQR(String code){
 	  Intent intent = new Intent(this, DisplayQRActivity.class);
 	  intent.putExtra(QR_CODE,code);
   }
   
   private void setupUI() {
-    final Spinner imageSelect = (Spinner) findViewById(R.id.input_image_select);
-    final EditText inputTopText = (EditText) findViewById(R.id.input_top_text);
-    final EditText inputBottomText = (EditText) findViewById(R.id.input_bottom_text);
-    final TextView previewTopText = (TextView) findViewById(R.id.preview_top_text);
-    final TextView previewBottomText = (TextView) findViewById(R.id.preview_bottom_text);
-    final ParseImageView previewImage = (ParseImageView) findViewById(R.id.preview_meme_image);
-    
-    Button saveButton = (Button) findViewById(R.id.save_meme_button);
-    Button profile = (Button) findViewById(R.id.profile_button);
-    for (int i=0; i<10; i++){
-    	Button myButton = new Button(this);
-    	myButton.setText("Push Me");//TODO
 
-    	LinearLayout ll = (LinearLayout)findViewById(R.id.card_list);
-    	LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-    	ll.addView(myButton, lp);
-    	myButton.setOnClickListener(new OnClickListener() {
-    	      @Override
-    	      public void onClick(View v) {
-    	        displayQR("");//TODO
-    	      }
-    	    });
+    userText = (TextView) findViewById(R.id.user_id);
+    emailText = (TextView) findViewById(R.id.email_text);
+    qrImage = (ImageView) findViewById(R.id.user_qr);
+    
+
+
+    Button meButton = (Button) findViewById(R.id.me_button);
+    if (ParseUser.getCurrentUser() != null) {
+	    encode(ParseUser.getCurrentUser().getObjectId());
+	    emailText.setText(ParseUser.getCurrentUser().getEmail());
+	    userText.setText(R.string.user_text);
     }
-    
-    getPhotosAndSetUpUI(imageSelect, previewImage);
-        
-    inputTopText.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void onTextChanged(CharSequence s, int start, int before, int count) {
-        previewTopText.setText(s);
-      }
 
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count,
-          int after) {
-      }
+    meButton.setOnClickListener(new OnClickListener() {
 
-      @Override
-      public void afterTextChanged(Editable s) {
-      }
-    });
-
-    inputBottomText.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void onTextChanged(CharSequence s, int start, int before, int count) {
-        previewBottomText.setText(s);
-      }
-
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count,
-          int after) {
-      }
-
-      @Override
-      public void afterTextChanged(Editable s) {
-      }
-    });
-
-    saveButton.setOnClickListener(new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        handleSave(inputTopText.getText().toString(), 
-            inputBottomText.getText().toString());
-      }
-    });
-
-    
-    profile.setOnClickListener(new OnClickListener() {
         @Override
+
         public void onClick(View v) {
-          openProfile();
+
+          startActivity(new Intent(MainActivity.this, MeActivity.class));
+
         }
+
       });
+  
+
+    
+
   }
   
   // Sets up the photo selector spinner drop down menu
@@ -328,5 +295,43 @@ public class MainActivity extends Activity {
   private void showMemeSavedToast() {
     Toast.makeText(MainActivity.this, R.string.meme_saved_toast_text,
         Toast.LENGTH_LONG).show();    
+  }
+  private void encode(String uniqueID) {
+      // TODO Auto-generated method stub
+       BarcodeFormat barcodeFormat = BarcodeFormat.QR_CODE;
+
+          int width0 = 500;
+          int height0 = 500;
+
+          int colorBack = 0xFF000000;
+          int colorFront = 0xFFFFFFFF;
+
+          QRCodeWriter writer = new QRCodeWriter();
+          try
+          {
+              EnumMap<EncodeHintType, Object> hint = new EnumMap<EncodeHintType, Object>(EncodeHintType.class);
+              //hint.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+              BitMatrix bitMatrix = writer.encode(uniqueID, barcodeFormat, width0, height0, hint);
+              int width = bitMatrix.getWidth();
+              int height = bitMatrix.getHeight();
+              int[] pixels = new int[width * height];
+              for (int y = 0; y < height; y++)
+              {
+                  int offset = y * width;
+                  for (int x = 0; x < width; x++)
+                  {
+
+                      pixels[offset + x] = bitMatrix.get(x, y) ? colorBack : colorFront;
+                  }
+              }
+
+              Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+              bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+              ImageView imageview = (ImageView)findViewById(R.id.user_qr);
+              imageview.setImageBitmap(bitmap);
+          } catch (WriterException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+          }
   }
 }
