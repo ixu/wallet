@@ -14,7 +14,8 @@
     <string name="save_meme_button_text">Save</string>
     <string name="meme_saved_toast_text">Meme saved!</string>
     <string name="meme_save_failed_toast_text">Failed to save meme</string>
-    <string name="me_button_text">Me</string>    
+    <string name="me_button_text">Cards</string>    
+    <string name="user_text">User QR Code</string> 
     <string name="failed_to_get_meme_toast_text">Failed to get meme</string>
     <string-array name="input_images_array">
         <item>yuno.png</item>
